@@ -56,6 +56,19 @@ export default function TierList() {
     return stored ? JSON.parse(stored) : defaultLayout;
   });
 
+  const [selectedItemId, setSelectedItemId] = useState(null);
+
+  function handleSelectItem(itemId) {
+    setSelectedItemId((prev) => (prev === itemId ? null : itemId));
+  }
+
+  function handleTierClick(tierKey) {
+    if (!selectedItemId) return;
+    const fromTier = Object.keys(layout).find((k) => layout[k]?.includes(selectedItemId));
+    handleDropToTier(selectedItemId, fromTier, tierKey, undefined);
+    setSelectedItemId(null);
+  }
+
   useEffect(() => {
     localStorage.setItem('tier_items', JSON.stringify(items));
   }, [items]);
@@ -168,6 +181,9 @@ export default function TierList() {
                     onDelete={handleDelete}
                     onImageChange={handleImageChange}
                     color={TIER_COLORS[tier]}
+                    selectedItemId={selectedItemId}
+                    onSelectItem={handleSelectItem}
+                    onTierClick={handleTierClick}
                   />
                 </div>
               ))}
@@ -188,6 +204,9 @@ export default function TierList() {
                 onDelete={handleDelete}
                 onImageChange={handleImageChange}
                 color={TIER_COLORS.pool}
+                selectedItemId={selectedItemId}
+                onSelectItem={handleSelectItem}
+                onTierClick={handleTierClick}
               />
 
               <AddItemForm onAdd={addItem} />
