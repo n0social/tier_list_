@@ -95,6 +95,16 @@ export default function TierList() {
     });
   }
 
+  function handleImageChange(itemId, dataUrl) {
+    setItems((prev) => {
+      const copy = { ...prev };
+      if (copy[itemId]) {
+        copy[itemId] = { ...copy[itemId], image: dataUrl };
+      }
+      return copy;
+    });
+  }
+
   function handleDelete(itemId) {
     setItems((prev) => {
       const copy = { ...prev };
@@ -104,12 +114,12 @@ export default function TierList() {
     setLayout((prev) => removeFromAll(prev, itemId));
   }
 
-  function addItem(name) {
-    if (!name) return;
+  function addItem(name, image) {
+    const finalName = name && name.length ? name : 'Item';
     const id = `i${Date.now()}`;
-    const emoji = name.trim().charAt(0) || '⭐';
-    setItems((prev) => ({ ...prev, [id]: { id, name, emoji } }));
-    setLayout((prev) => ({ ...prev, pool: [id, ...prev.pool] }));
+    const emoji = finalName.trim().charAt(0) || '⭐';
+    setItems((prev) => ({ ...prev, [id]: { id, name: finalName, emoji, image } }));
+    setLayout((prev) => ({ ...prev, pool: [id, ...(prev.pool || [])] }));
   }
 
   function resetToDefaults() {
@@ -156,6 +166,7 @@ export default function TierList() {
                     onDragOver={handleDragOver}
                     onDropToTier={handleDropToTier}
                     onDelete={handleDelete}
+                    onImageChange={handleImageChange}
                     color={TIER_COLORS[tier]}
                   />
                 </div>
@@ -175,6 +186,7 @@ export default function TierList() {
                 onDragOver={handleDragOver}
                 onDropToTier={handleDropToTier}
                 onDelete={handleDelete}
+                onImageChange={handleImageChange}
                 color={TIER_COLORS.pool}
               />
 
@@ -195,12 +207,25 @@ export default function TierList() {
 
 function AddItemForm({ onAdd }) {
   const [name, setName] = useState('');
+  const [imageData, setImageData] = useState(null);
+  const [fileKey, setFileKey] = useState(Date.now());
+
+  function handleFileChange(e) {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => setImageData(reader.result);
+    reader.readAsDataURL(f);
+  }
+
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        onAdd(name.trim());
+        onAdd(name.trim(), imageData);
         setName('');
+        setImageData(null);
+        setFileKey(Date.now());
       }}
       className="mt-3"
     >
@@ -210,6 +235,12 @@ function AddItemForm({ onAdd }) {
         placeholder="Add new item"
         className="w-full border border-gray-700 bg-[#0b0b0b] text-white rounded p-2 mb-2"
       />
+
+      <div className="mb-2">
+        <input key={fileKey} type="file" accept="image/*" onChange={handleFileChange} className="w-full text-sm text-gray-300" />
+        {imageData ? <img src={imageData} alt="preview" className="mt-2 w-24 h-24 object-cover rounded" /> : null}
+      </div>
+
       <div className="text-right">
         <button type="submit" className="px-3 py-1 bg-indigo-600 text-white rounded">Add</button>
       </div>

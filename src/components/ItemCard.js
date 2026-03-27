@@ -1,6 +1,23 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
-export default function ItemCard({ item, fromTier, onDragStart, onDelete }) {
+export default function ItemCard({ item, fromTier, onDragStart, onDelete, onImageChange }) {
+  const fileRef = useRef(null);
+
+  function handleFileClick(e) {
+    e.stopPropagation();
+    fileRef.current?.click();
+  }
+
+  function handleFileChange(e) {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      onImageChange && onImageChange(item.id, reader.result);
+    };
+    reader.readAsDataURL(f);
+  }
+
   return (
     <div
       draggable
@@ -8,9 +25,20 @@ export default function ItemCard({ item, fromTier, onDragStart, onDelete }) {
       className="bg-white rounded shadow-sm p-3 min-w-[120px] max-w-[160px] flex-shrink-0 cursor-grab hover:scale-[1.02] transition-transform"
     >
       <div className="flex flex-col items-center gap-2">
-        <div className="text-3xl select-none">{item.emoji || '🔹'}</div>
+        {item.image ? (
+          <img src={item.image} alt={item.name} className="w-28 h-28 object-cover rounded" />
+        ) : (
+          <div className="text-3xl select-none">{item.emoji || '🔹'}</div>
+        )}
+
         <div className="text-sm font-medium text-center">{item.name}</div>
-        <button onClick={() => onDelete(item.id)} className="text-xs text-red-500 hover:text-red-700 mt-1">Remove</button>
+
+        <div className="flex gap-2 mt-1">
+          <button onClick={() => onDelete(item.id)} className="text-xs text-red-500 hover:text-red-700">Remove</button>
+          <button onClick={handleFileClick} className="text-xs text-gray-700 hover:text-gray-900">Change</button>
+        </div>
+
+        <input ref={fileRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
       </div>
     </div>
   );

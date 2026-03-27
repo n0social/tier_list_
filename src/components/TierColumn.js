@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ItemCard from './ItemCard';
 
-export default function TierColumn({ tierKey, title, itemIds = [], itemsMap = {}, onDragStart, onDropToTier, onDragOver, onDelete, color }) {
+export default function TierColumn({ tierKey, title, itemIds = [], itemsMap = {}, onDragStart, onDropToTier, onDragOver, onDelete, onImageChange, color }) {
   const [isOver, setIsOver] = useState(false);
 
   function handleDragEnter(e) {
@@ -71,7 +71,13 @@ export default function TierColumn({ tierKey, title, itemIds = [], itemsMap = {}
             ) : (
               itemIds.map((id) => (
                 <div key={id} className="draggable-item-wrapper">
-                  <ItemCard item={itemsMap[id]} fromTier={tierKey} onDragStart={onDragStart} onDelete={onDelete} />
+                  <ItemCard
+                    item={itemsMap[id]}
+                    fromTier={tierKey}
+                    onDragStart={onDragStart}
+                    onDelete={onDelete}
+                    onImageChange={onImageChange}
+                  />
                 </div>
               ))
             )}
