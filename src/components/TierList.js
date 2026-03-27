@@ -14,16 +14,10 @@ const TIER_COLORS = {
   pool: '#9CA3AF',
 };
 
-const sampleItems = {
-  i1: { id: 'i1', name: 'Pikachu', emoji: '⚡' },
-  i2: { id: 'i2', name: 'Mario', emoji: '🧑‍🌾' },
-  i3: { id: 'i3', name: 'Link', emoji: '🗡️' },
-  i4: { id: 'i4', name: 'Samus', emoji: '🔫' },
-  i5: { id: 'i5', name: 'Kirby', emoji: '🍬' },
-};
+const sampleItems = {};
 
 const defaultLayout = {
-  pool: ['i1', 'i2', 'i3', 'i4', 'i5'],
+  pool: [],
   S: [],
   A: [],
   B: [],
