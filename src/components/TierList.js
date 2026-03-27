@@ -152,8 +152,8 @@ export default function TierList() {
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold text-center mb-6">n0social's Ultimate Tier List</h1>
 
-        <div className="flex flex-col lg:flex-row gap-6">
-          <div className="lg:w-2/3">
+        <div className="flex flex-col gap-6">
+          <div>
             <div ref={exportRef} className="tier-list-export p-4 bg-[#0b0b0b] rounded shadow">
               {TIERS.map((tier) => (
                 <div key={tier} className="mb-4">
@@ -174,7 +174,7 @@ export default function TierList() {
             </div>
           </div>
 
-          <div className="lg:w-1/3">
+          <div>
             <div className="bg-[#0b0b0b] p-4 rounded shadow mb-4">
               <h2 className="font-semibold mb-2 text-white">Pool</h2>
               <TierColumn

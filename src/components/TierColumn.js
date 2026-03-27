@@ -65,23 +65,24 @@ export default function TierColumn({ tierKey, title, itemIds = [], itemsMap = {}
           onDragOver={(e) => onDragOver(e)}
           onDrop={handleDrop}
         >
-          <div className="tier-items-container flex flex-wrap gap-3 items-start">
-            {itemIds.length === 0 ? (
-              <div className="text-gray-400 text-sm">Drop items here</div>
-            ) : (
-              itemIds.map((id) => (
-                <div key={id} className="draggable-item-wrapper">
-                  <ItemCard
-                    item={itemsMap[id]}
-                    fromTier={tierKey}
-                    onDragStart={onDragStart}
-                    onDelete={onDelete}
-                    onImageChange={onImageChange}
-                  />
-                </div>
-              ))
-            )}
-          </div>
+            <div className={tierKey === 'pool' ? 'tier-items-container grid grid-cols-4 md:grid-cols-6 gap-2 items-start' : 'tier-items-container flex flex-wrap gap-3 items-start'}>
+              {itemIds.length === 0 ? (
+                <div className="text-gray-400 text-sm">Drop items here</div>
+              ) : (
+                itemIds.map((id) => (
+                  <div key={id} className="draggable-item-wrapper">
+                    <ItemCard
+                      item={itemsMap[id]}
+                      fromTier={tierKey}
+                      onDragStart={onDragStart}
+                      onDelete={onDelete}
+                      onImageChange={onImageChange}
+                      compact={tierKey === 'pool'}
+                    />
+                  </div>
+                ))
+              )}
+            </div>
         </div>
       </div>
     </div>
