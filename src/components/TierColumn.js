@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ItemCard from './ItemCard';
 
 export default function TierColumn({ tierKey, title, itemIds = [], itemsMap = {}, onDragStart, onDropToTier, onDragOver, onDelete, color }) {
+  const [isOver, setIsOver] = useState(false);
+
+  function handleDragEnter(e) {
+    e.preventDefault();
+    setIsOver(true);
+  }
+
+  function handleDragLeave() {
+    setIsOver(false);
+  }
+
   function handleDrop(e) {
     e.preventDefault();
+    setIsOver(false);
     const raw = e.dataTransfer.getData('application/json');
     if (!raw) return;
     let payload;
@@ -35,31 +47,35 @@ export default function TierColumn({ tierKey, title, itemIds = [], itemsMap = {}
 
   return (
     <div className="w-full">
-      <div className="flex items-center mb-2">
+      <div
+        className={`tier-row flex items-stretch mb-3 rounded overflow-hidden`}
+        style={{ backgroundColor: color ? `${color}22` : 'transparent' }}
+      >
         <div
-          className="w-14 h-10 flex items-center justify-center font-bold text-white rounded mr-3"
-          style={{ background: color || '#6b7280' }}
+          className="tier-label flex items-center justify-center font-bold text-white text-2xl"
+          style={{ backgroundColor: color || '#6b7280', width: 96 }}
         >
           {title}
         </div>
-        <div className="text-sm text-gray-600">{itemIds.length} items</div>
-      </div>
 
-      <div
-        onDragOver={(e) => onDragOver(e)}
-        onDrop={handleDrop}
-        className="min-h-[96px] p-3 border rounded bg-white"
-      >
-        <div className="tier-items-container flex flex-wrap gap-3 items-start">
-          {itemIds.length === 0 ? (
-            <div className="text-gray-400 text-sm">Drop items here</div>
-          ) : (
-            itemIds.map((id) => (
-              <div key={id} className="draggable-item-wrapper">
-                <ItemCard item={itemsMap[id]} fromTier={tierKey} onDragStart={onDragStart} onDelete={onDelete} />
-              </div>
-            ))
-          )}
+        <div
+          className={`tier-band flex-1 p-3 ${isOver ? 'ring-4 ring-offset-2 ring-indigo-300' : ''}`}
+          onDragEnter={handleDragEnter}
+          onDragLeave={handleDragLeave}
+          onDragOver={(e) => onDragOver(e)}
+          onDrop={handleDrop}
+        >
+          <div className="tier-items-container flex flex-wrap gap-3 items-start">
+            {itemIds.length === 0 ? (
+              <div className="text-gray-400 text-sm">Drop items here</div>
+            ) : (
+              itemIds.map((id) => (
+                <div key={id} className="draggable-item-wrapper">
+                  <ItemCard item={itemsMap[id]} fromTier={tierKey} onDragStart={onDragStart} onDelete={onDelete} />
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </div>
     </div>

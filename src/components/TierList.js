@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import TierColumn from './TierColumn';
 import html2canvas from 'html2canvas';
 
-const TIERS = ['S', 'A', 'B', 'C', 'D'];
+const TIERS = ['S', 'A', 'B', 'C', 'D', 'Nah'];
 
 const TIER_COLORS = {
   S: '#ef4444', // red
@@ -10,6 +10,7 @@ const TIER_COLORS = {
   B: '#facc15', // yellow
   C: '#34d399', // green
   D: '#60a5fa', // blue
+  Nah: '#374151', // slate gray
   pool: '#9CA3AF',
 };
 
@@ -28,6 +29,7 @@ const defaultLayout = {
   B: [],
   C: [],
   D: [],
+  Nah: [],
 };
 
 function removeFromAll(layout, itemId) {
@@ -142,14 +144,34 @@ export default function TierList() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-4">
+    <div className="min-h-screen bg-black text-white py-8 px-4">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-6">Tier List Builder</h1>
+        <h1 className="text-4xl font-bold text-center mb-6">n0social's Ultimate Tier List</h1>
 
         <div className="flex flex-col lg:flex-row gap-6">
+          <div className="lg:w-2/3">
+            <div ref={exportRef} className="tier-list-export p-4 bg-[#0b0b0b] rounded shadow">
+              {TIERS.map((tier) => (
+                <div key={tier} className="mb-4">
+                  <TierColumn
+                    tierKey={tier}
+                    title={tier}
+                    itemIds={layout[tier]}
+                    itemsMap={items}
+                    onDragStart={handleDragStart}
+                    onDragOver={handleDragOver}
+                    onDropToTier={handleDropToTier}
+                    onDelete={handleDelete}
+                    color={TIER_COLORS[tier]}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div className="lg:w-1/3">
-            <div className="bg-white p-4 rounded shadow mb-4">
-              <h2 className="font-semibold mb-2">Pool</h2>
+            <div className="bg-[#0b0b0b] p-4 rounded shadow mb-4">
+              <h2 className="font-semibold mb-2 text-white">Pool</h2>
               <TierColumn
                 tierKey={'pool'}
                 title={'Pool'}
@@ -169,28 +191,6 @@ export default function TierList() {
                 <button onClick={copyShareLink} className="px-3 py-2 bg-blue-600 text-white rounded">Copy Share Link</button>
                 <button onClick={resetToDefaults} className="px-3 py-2 bg-gray-200 rounded">Reset</button>
               </div>
-            </div>
-
-            <div className="text-sm text-gray-500">Saved locally in browser. Use the share link to share your list.</div>
-          </div>
-
-          <div className="lg:w-2/3">
-            <div ref={exportRef} className="tier-list-export p-4 bg-white rounded shadow">
-              {TIERS.map((tier) => (
-                <div key={tier} className="mb-4">
-                  <TierColumn
-                    tierKey={tier}
-                    title={tier}
-                    itemIds={layout[tier]}
-                    itemsMap={items}
-                    onDragStart={handleDragStart}
-                    onDragOver={handleDragOver}
-                    onDropToTier={handleDropToTier}
-                    onDelete={handleDelete}
-                    color={TIER_COLORS[tier]}
-                  />
-                </div>
-              ))}
             </div>
           </div>
         </div>
@@ -214,7 +214,7 @@ function AddItemForm({ onAdd }) {
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Add new item"
-        className="w-full border rounded p-2 mb-2"
+        className="w-full border border-gray-700 bg-[#0b0b0b] text-white rounded p-2 mb-2"
       />
       <div className="text-right">
         <button type="submit" className="px-3 py-1 bg-indigo-600 text-white rounded">Add</button>

@@ -36,3 +36,46 @@
     transform: rotate(360deg);
   }
 }
+
+/* TierMaker-like styles */
+.tier-list-export {
+  border-radius: 8px;
+}
+.tier-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+.tier-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: white;
+  padding: 8px;
+  min-width: 96px;
+}
+.tier-band {
+  display: flex;
+  flex: 1 1 auto;
+  padding: 12px;
+  align-items: flex-start;
+  min-height: 96px;
+}
+.tier-items-container {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.draggable-item-wrapper {
+  display: inline-flex;
+}
+.tier-band.ring-4 {
+  box-shadow: 0 0 0 4px rgba(99,102,241,0.2);
+}
+
+/* Item thumbnail tweaks */
+.draggable-item-wrapper .bg-white {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
